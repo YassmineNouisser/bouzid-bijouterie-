@@ -46,7 +46,7 @@ function RingModel({ groupRef }: { groupRef: React.RefObject<THREE.Group | null>
 
   return (
     <group ref={groupRef}>
-      <primitive object={scene} scale={1.8} />
+      <primitive object={scene} scale={1.5} />
     </group>
   );
 }
