@@ -18,15 +18,26 @@ const products = [
    Camera positions — exact values from webgi-jewelry source
    The RING stays at origin. The CAMERA orbits around it.
    ═══════════════════════════════════════════════════════════════════ */
+const isMobile = () => window.innerWidth < 768;
+
 const CAM = {
-  // Close-up (intro start) — same as original WebGI
   introStart: { pos: { x: 3, y: -0.8, z: 1.2 }, tgt: { x: 2.5, y: -0.07, z: -0.1 } },
-  // Hero — exact WebGI camera (diamonds face viewer)
-  hero:       { pos: { x: 1.28, y: -1.7, z: 5.86 }, tgt: { x: 0.91, y: 0.03, z: -0.25 } },
-  // Forever — camera far LEFT → ring clearly on RIGHT
-  forever:    { pos: { x: -4, y: -0.14, z: 6 }, tgt: { x: -1.5, y: -0.03, z: -0.12 } },
-  // Emotions — camera CENTER-BELOW → ring top-center
-  emotions:   { pos: { x: -0.06, y: -1.15, z: 4.42 }, tgt: { x: -0.01, y: 0.9, z: 0.07 } },
+  // Desktop / Mobile camera positions
+  get hero() {
+    return isMobile()
+      ? { pos: { x: 0, y: -1.5, z: 9 }, tgt: { x: 0, y: 0.2, z: 0 } }
+      : { pos: { x: 1.28, y: -1.7, z: 5.86 }, tgt: { x: 0.91, y: 0.03, z: -0.25 } };
+  },
+  get forever() {
+    return isMobile()
+      ? { pos: { x: 0, y: -1, z: 9 }, tgt: { x: 0, y: 0.2, z: 0 } }
+      : { pos: { x: -4, y: -0.14, z: 6 }, tgt: { x: -1.5, y: -0.03, z: -0.12 } };
+  },
+  get emotions() {
+    return isMobile()
+      ? { pos: { x: 0, y: -1.5, z: 7 }, tgt: { x: 0, y: 0.8, z: 0 } }
+      : { pos: { x: -0.06, y: -1.15, z: 4.42 }, tgt: { x: -0.01, y: 0.9, z: 0.07 } };
+  },
 };
 
 export function JewelryPage() {
