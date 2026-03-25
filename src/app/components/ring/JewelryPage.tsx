@@ -25,7 +25,7 @@ const CAM = {
   // Desktop / Mobile camera positions
   get hero() {
     return isMobile()
-      ? { pos: { x: 0, y: -1.5, z: 9 }, tgt: { x: 0, y: 0.2, z: 0 } }
+      ? { pos: { x: 0, y: -3, z: 9 }, tgt: { x: 0, y: 0.5, z: 0 } }
       : { pos: { x: 1.28, y: -1.7, z: 5.86 }, tgt: { x: 0.91, y: 0.03, z: -0.25 } };
   },
   get forever() {
