@@ -258,7 +258,7 @@ export function JewelryPage() {
       </section>
 
       {/* ═══ SECTION 4: Collections ═══════════════════════════════ */}
-      <section className="scroll-section-4 relative z-40 bg-[#2A2118]/85 text-[#F5EFE6] backdrop-blur-sm">
+      <section className="scroll-section-4 relative z-40 bg-[#2A2118]/60 text-[#F5EFE6] backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-24">
           <div className="text-center mb-16">
             <p className="text-[#C9A96E] text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: "'Montserrat', sans-serif" }}>Nos Collections</p>
