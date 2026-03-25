@@ -136,7 +136,7 @@ export function JewelryPage() {
   const scrollTo = (sel: string) => document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div className="relative bg-[#D9C9AB]">
+    <div className="relative bg-[#D9C9AB] overflow-x-hidden">
       {/* ─── Loading Screen (z-100, covers canvas) ─────────────── */}
       <div className="loader-screen fixed inset-0 z-[100] bg-[#D9C9AB] flex items-center justify-center">
         <div className="text-center">
@@ -152,7 +152,7 @@ export function JewelryPage() {
 
       {/* ─── Header ────────────────────────────────────────────── */}
       <header className="header-bar fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-12 py-5 opacity-0">
-        <img src="/assets/logo-bouzid.png" alt="Bouzid" className="h-28 object-contain" />
+        <img src="/assets/logo-bouzid.png" alt="Bouzid" className="h-16 md:h-28 object-contain" />
         <nav className="hidden md:flex gap-8">
           {['Accueil', 'Collections', 'Contact'].map((item, i) => (
             <button key={item} onClick={() => scrollTo(i === 0 ? '.cam-view-1' : i === 1 ? '.scroll-section-4' : '.scroll-section-5')}
@@ -160,12 +160,12 @@ export function JewelryPage() {
               style={{ fontFamily: "'Montserrat', sans-serif" }}>{item}</button>
           ))}
         </nav>
-        <a href="tel:+21697476401" className="text-sm tracking-[0.1em] text-[#3B2F1E] border border-[#3B2F1E]/30 px-5 py-2 hover:bg-[#3B2F1E]/10 transition-colors"
+        <a href="tel:+21697476401" className="hidden md:inline-block text-sm tracking-[0.1em] text-[#3B2F1E] border border-[#3B2F1E]/30 px-5 py-2 hover:bg-[#3B2F1E]/10 transition-colors"
           style={{ fontFamily: "'Montserrat', sans-serif" }}>Rendez-vous</a>
       </header>
 
       {/* ─── Side Nav (right) ──────────────────────────────────── */}
-      <div className="side-nav fixed right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-4 opacity-0">
+      <div className="side-nav hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-4 opacity-0">
         {['Unique', "L'Eternité", 'Émotions'].map((label, i) => (
           <button key={label} onClick={() => i === 0 ? window.scrollTo({ top: 0, behavior: 'smooth' }) : scrollTo(`.cam-view-${i + 1}`)}
             className={`nav-dot-${i + 1} text-xs tracking-[0.1em] text-[#3B2F1E] transition-all`}
@@ -178,16 +178,16 @@ export function JewelryPage() {
       {/* ═══ SECTION 1: Hero — text RIGHT (50% right half) ═══════ */}
       <section className="cam-view-1 relative h-screen w-full z-30 pointer-events-none">
         {/* Hero text container: fixed, right half */}
-        <div className="hero--container fixed top-0 right-0 w-1/2 h-screen flex items-center pointer-events-auto opacity-0">
-          <div className="hero--content mr-[12%] ml-auto max-w-[500px] text-right">
-            <h1 className="text-[80px] md:text-[100px] lg:text-[124px] text-[#3B2F1E] mb-4 leading-[0.9] uppercase" style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '-0.02em' }}>
+        <div className="hero--container fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto md:left-auto md:right-0 w-full md:w-1/2 h-auto md:h-screen flex items-end md:items-center pointer-events-auto opacity-0 z-30">
+          <div className="w-full px-6 pb-20 md:pb-0 md:px-0 md:mr-[12%] md:ml-auto md:max-w-[500px] text-center md:text-right">
+            <h1 className="text-[48px] md:text-[100px] lg:text-[124px] text-[#3B2F1E] mb-4 leading-[0.9] uppercase" style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '-0.02em' }}>
               Bijoux<br />uniques
             </h1>
-            <p className="text-[#3B2F1E]/60 text-sm leading-relaxed mb-8 max-w-[320px] ml-auto" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <p className="text-[#3B2F1E]/60 text-xs md:text-sm leading-relaxed mb-6 md:mb-8 max-w-[280px] md:max-w-[320px] mx-auto md:mx-0 md:ml-auto" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Personnalisez votre bague avec des angles graphiques et des lignes pures. Un bijou qui vous ressemble.
             </p>
             <button onClick={() => scrollTo('.cam-view-2')}
-              className="px-8 py-3 bg-[#3B2F1E] text-[#D9C9AB] tracking-[0.15em] uppercase text-sm hover:bg-[#4A3C28] transition-colors float-right"
+              className="px-6 md:px-8 py-3 bg-[#3B2F1E] text-[#D9C9AB] tracking-[0.15em] uppercase text-xs md:text-sm hover:bg-[#4A3C28] transition-colors md:float-right"
               style={{ fontFamily: "'Montserrat', sans-serif" }}>Explorer</button>
           </div>
         </div>
@@ -206,13 +206,13 @@ export function JewelryPage() {
         <div className="forever--text-bg fixed inset-0 flex items-center pointer-events-none opacity-0 z-20">
           <h2 className="text-[20vw] text-[#3B2F1E] leading-none select-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Eternité</h2>
         </div>
-        <div className="forever--container fixed top-0 left-0 w-[70%] h-screen flex items-center pointer-events-auto opacity-0 z-30">
-          <div className="ml-[12%] max-w-lg">
+        <div className="forever--container fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto md:right-auto md:left-0 w-full md:w-[70%] h-auto md:h-screen flex items-end md:items-center pointer-events-auto opacity-0 z-30">
+          <div className="w-full px-6 pb-20 md:pb-0 md:px-0 md:ml-[12%] md:max-w-lg text-center md:text-left">
             <p className="text-[#3B2F1E]/50 text-sm italic mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: '0.05em' }}>créé pour durer</p>
-            <h2 className="text-[80px] md:text-[100px] lg:text-[124px] text-[#3B2F1E] leading-[0.9] uppercase mb-6" style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '-0.02em' }}>
+            <h2 className="text-[48px] md:text-[100px] lg:text-[124px] text-[#3B2F1E] leading-[0.9] uppercase mb-4 md:mb-6" style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '-0.02em' }}>
               Pour<br />l'éternité
             </h2>
-            <p className="text-[#3B2F1E]/60 text-sm leading-relaxed max-w-[320px]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <p className="text-[#3B2F1E]/60 text-xs md:text-sm leading-relaxed max-w-[280px] md:max-w-[320px] mx-auto md:mx-0" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Personnalisez votre bague avec des angles graphiques et des lignes pures. Un bijou créé pour traverser le temps.
             </p>
             <div className="flex gap-4">
@@ -232,12 +232,12 @@ export function JewelryPage() {
         <div className="emotions--text-bg fixed inset-0 flex items-start justify-center pointer-events-none opacity-0 z-20">
           <h2 className="text-[20vw] text-[#3B2F1E] leading-none select-none mt-[5vh]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Émotions</h2>
         </div>
-        <div className="emotions--content fixed bottom-12 left-1/2 -translate-x-1/2 text-center max-w-2xl w-full px-6 pointer-events-auto opacity-0 z-30">
-          <p className="text-[#3B2F1E]/50 text-sm italic mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: '0.05em' }}>partagez vos</p>
-          <h2 className="text-[60px] md:text-[80px] lg:text-[114px] text-[#3B2F1E] leading-[0.9] uppercase mb-6" style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '-0.02em' }}>
+        <div className="emotions--content fixed bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 text-center max-w-2xl w-full px-6 pointer-events-auto opacity-0 z-30">
+          <p className="text-[#3B2F1E]/50 text-xs md:text-sm italic mb-2" style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: '0.05em' }}>partagez vos</p>
+          <h2 className="text-[40px] md:text-[80px] lg:text-[114px] text-[#3B2F1E] leading-[0.9] uppercase mb-4 md:mb-6" style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '-0.02em' }}>
             Émotions
           </h2>
-          <p className="text-[#3B2F1E]/60 text-sm leading-relaxed max-w-[400px] mx-auto mb-8" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <p className="text-[#3B2F1E]/60 text-xs md:text-sm leading-relaxed max-w-[280px] md:max-w-[400px] mx-auto mb-6 md:mb-8" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Des pierres précieuses colorées, de l'aigue-marine aux diamants, combinées avec de l'or blanc pour capturer l'essence de vos plus beaux souvenirs.
           </p>
           <button onClick={() => scrollTo('.scroll-section-4')}
