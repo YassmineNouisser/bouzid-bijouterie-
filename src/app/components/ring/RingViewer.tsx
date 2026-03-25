@@ -17,15 +17,12 @@ function RingModel({ groupRef }: { groupRef: React.RefObject<THREE.Group | null>
       if (DIAMOND_NAMES.includes(name)) {
         child.material = new THREE.MeshPhysicalMaterial({
           color: new THREE.Color('#ffffff'),
-          metalness: 0.0, roughness: 0.0,
-          transmission: 0.95, transparent: true, opacity: 1.0,
-          thickness: 4.0, ior: 2.42,
-          dispersion: 0.3,
+          metalness: 0.1, roughness: 0.0,
+          transmission: 0.9, transparent: true, opacity: 1.0,
+          thickness: 3.0, ior: 2.42,
           clearcoat: 1.0, clearcoatRoughness: 0.0,
-          envMapIntensity: 12.0, reflectivity: 1.0,
-          attenuationColor: new THREE.Color('#ffffff'), attenuationDistance: 0.1,
+          envMapIntensity: 10.0, reflectivity: 1.0,
           specularIntensity: 1.0, specularColor: new THREE.Color('#ffffff'),
-          side: THREE.DoubleSide,
         });
         child.material.needsUpdate = true;
       } else if (name === 'silver') {
@@ -106,9 +103,11 @@ export function RingCanvas({ ringRef, cameraPositionRef, targetRef, orbitEnabled
       }}
     >
       <Canvas
-        gl={{ antialias: true, powerPreference: 'high-performance' }}
+        gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }}
         camera={{ fov: 50, near: 0.1, far: 100, position: [3, -0.8, 1.2] }}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
+        performance={{ min: 0.5 }}
+        frameloop="always"
         onCreated={({ gl, scene }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 2.2;
@@ -117,14 +116,10 @@ export function RingCanvas({ ringRef, cameraPositionRef, targetRef, orbitEnabled
         }}
       >
         <CameraController cameraPositionRef={cameraPositionRef} targetRef={targetRef} orbitEnabled={orbitEnabled} />
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[5, 8, 5]} intensity={3.0} color="#ffffff" castShadow />
-        <directionalLight position={[-5, 3, -5]} intensity={1.2} color="#ffeedd" />
-        <pointLight position={[0, 10, 0]} intensity={3.0} color="#ffffff" />
-        <pointLight position={[-5, 2, 5]} intensity={1.0} color="#ffffff" />
-        <pointLight position={[5, 2, -5]} intensity={1.0} color="#ffffff" />
-        <spotLight position={[2, 8, 4]} angle={0.25} penumbra={1} intensity={4.0} color="#ffffff" castShadow />
-        <spotLight position={[-2, 6, -3]} angle={0.3} penumbra={0.8} intensity={2.0} color="#ffeedd" />
+        <ambientLight intensity={1.0} />
+        <directionalLight position={[5, 8, 5]} intensity={3.5} color="#ffffff" />
+        <directionalLight position={[-5, 3, -5]} intensity={1.5} color="#ffeedd" />
+        <pointLight position={[0, 10, 0]} intensity={2.0} color="#ffffff" />
         <Environment preset="city" />
         <Suspense fallback={null}>
           <RingModel groupRef={ringRef} />
