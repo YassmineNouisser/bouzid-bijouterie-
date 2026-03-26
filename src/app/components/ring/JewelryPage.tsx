@@ -26,12 +26,12 @@ const CAM = {
   get hero() {
     return isMobile()
       ? { pos: { x: 0, y: -3, z: 9 }, tgt: { x: 0, y: 0.5, z: 0 } }
-      : { pos: { x: 1.28, y: -1.7, z: 5.86 }, tgt: { x: 0.91, y: 0.03, z: -0.25 } };
+      : { pos: { x: 3.5, y: -1.7, z: 4.5 }, tgt: { x: 2, y: 0.03, z: -0.25 } };
   },
   get forever() {
     return isMobile()
       ? { pos: { x: 0, y: -1, z: 9 }, tgt: { x: 0, y: 0.2, z: 0 } }
-      : { pos: { x: -4, y: -0.14, z: 6 }, tgt: { x: -1.5, y: -0.03, z: -0.12 } };
+      : { pos: { x: -6, y: -0.14, z: 4 }, tgt: { x: -3, y: -0.03, z: -0.12 } };
   },
   get emotions() {
     return isMobile()
@@ -108,12 +108,12 @@ export function JewelryPage() {
       },
     });
 
-    // Phase 1 (0→0.5): Hero → Forever — ring LEFT → RIGHT
+    // Phase 1 (0→1): Hero → Forever — ring LEFT → RIGHT
     camTL.to(pos, { ...CAM.forever.pos, duration: 1, ease: 'none' }, 0);
     camTL.to(tgt, { ...CAM.forever.tgt, duration: 1, ease: 'none' }, 0);
     camTL.to(ring.rotation, { x: 0, y: 0, z: Math.PI / 2, duration: 1, ease: 'none' }, 0);
 
-    // Phase 2 (0.5→1): Forever → Emotions — ring RIGHT → CENTER
+    // Phase 2 (1→2): Forever → Emotions — ring RIGHT → CENTER
     camTL.to(pos, { ...CAM.emotions.pos, duration: 1, ease: 'none' }, 1);
     camTL.to(tgt, { ...CAM.emotions.tgt, duration: 1, ease: 'none' }, 1);
     camTL.to(ring.rotation, { x: 0, y: 0, z: -Math.PI / 2, duration: 1, ease: 'none' }, 1);
@@ -137,9 +137,9 @@ export function JewelryPage() {
     gsap.to('.nav-dot-2', { opacity: 0.5, scale: 1, scrollTrigger: s3ui });
     gsap.to('.nav-dot-3', { opacity: 1, scale: 1.5, scrollTrigger: s3ui });
 
-    // Section 4: ring fades away
+    // Section 4: text + nav fade away (canvas handled by master timeline Phase 3)
     const s4ui = { trigger: '.scroll-section-4', start: 'top bottom', end: 'top top', scrub: 0.5, immediateRender: false };
-    gsap.to('#webgi-canvas-container', { opacity: 0, scrollTrigger: s4ui });
+        gsap.to('#webgi-canvas-container', { opacity: 0, scrollTrigger: s4ui });
     gsap.to('.emotions--content', { opacity: 0, y: '-50%', scrollTrigger: s4ui });
     gsap.to('.side-nav', { opacity: 0, scrollTrigger: s4ui });
   };
@@ -190,7 +190,7 @@ export function JewelryPage() {
       <section className="cam-view-1 relative h-screen w-full z-30 pointer-events-none">
         {/* Hero text container: fixed, right half */}
         <div className="hero--container fixed bottom-0 left-0 right-0 md:top-0 md:bottom-auto md:left-auto md:right-0 w-full md:w-1/2 h-auto md:h-screen flex items-end md:items-center pointer-events-auto opacity-0 z-30">
-          <div className="w-full px-6 pb-20 md:pb-0 md:px-0 md:mr-[12%] md:ml-auto md:max-w-[500px] text-center md:text-right">
+          <div className="w-full px-6 pb-20 md:pb-0 md:px-0 md:mr-[25%] md:ml-auto md:max-w-[500px] text-center md:text-right">
             <h1 className="text-[48px] md:text-[100px] lg:text-[124px] text-[#3B2F1E] mb-4 leading-[0.9] uppercase" style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700, letterSpacing: '-0.02em' }}>
               Bijoux<br />uniques
             </h1>
