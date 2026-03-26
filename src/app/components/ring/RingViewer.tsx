@@ -96,7 +96,7 @@ export function RingCanvas({ ringRef, cameraPositionRef, targetRef, orbitEnabled
   return (
     <div
       id="webgi-canvas-container"
-      className="fixed inset-0 max-md:-top-[90px] max-md:bottom-[122px]"
+      className="fixed inset-0 max-md:-top-[20px] max-md:bottom-[122px]"
       style={{
         zIndex: orbitEnabled ? 50 : 20,
         pointerEvents: orbitEnabled ? 'auto' : 'none',
