@@ -316,7 +316,7 @@ export function JewelryPage() {
       <section className="categories-section relative z-40">
         <div className="grid grid-cols-3">
           {[
-            { name: 'Colliers', image: '/assets/colliers.png', id: 'colliers' },
+            { name: 'Coliers', image: '/assets/colliers.png', id: 'colliers' },
             { name: 'Bagues', image: '/assets/bagues.png', id: 'bagues' },
             { name: 'Bracelets', image: '/assets/bracelets.png', id: 'bracelets' },
           ].map((cat) => (
