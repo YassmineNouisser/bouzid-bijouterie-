@@ -218,7 +218,7 @@ function MariageGallery({ collection, onClose, onSelect, selectedIndex, goNext, 
         <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
           {/* Background: video */}
           {collection.video && (
-            <video autoPlay muted loop playsInline preload="none" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
+            <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0d0906]/30 via-[#0d0906]/20 to-[#0d0906]" />
 
@@ -448,7 +448,7 @@ function TraditionGallery({ collection, onClose, onSelect, selectedIndex, goNext
         {/* Hero — Video background */}
         <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
           {collection.video && (
-            <video autoPlay muted loop playsInline preload="none" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
+            <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
           )}
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(26,10,10,0.3) 0%, rgba(26,10,10,0.2) 50%, rgba(13,5,5,1) 100%)' }} />
 
@@ -536,7 +536,7 @@ function TendanceGallery({ collection, onClose, onSelect, selectedIndex, goNext,
       {/* Hero — Video background */}
       <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
         {collection.video && (
-          <video autoPlay muted loop playsInline preload="none" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
+          <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black" />
 
@@ -667,7 +667,7 @@ function EclatGallery({ collection, onClose, onSelect, selectedIndex, goNext, go
         {/* Hero — Video background + golden title */}
         <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
           {collection.video && (
-            <video autoPlay muted loop playsInline preload="none" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
+            <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover opacity-50" src={collection.video} />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-[#080604]/40 via-[#080604]/20 to-[#080604]" />
           {/* Gold shimmer overlay */}
@@ -765,7 +765,7 @@ function LiraGallery({ collection, onClose, onSelect, selectedIndex, goNext, goP
           {/* Background video */}
           {collection.video && (
             <video
-              autoPlay muted loop playsInline preload="none"
+              autoPlay muted loop playsInline preload="metadata"
               className="absolute inset-0 w-full h-full object-cover opacity-40"
               src={collection.video}
             />
@@ -881,7 +881,7 @@ function PerlesGallery({ collection, onClose, onSelect, selectedIndex, goNext, g
         {/* Hero — Video background */}
         <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
           {collection.video && (
-            <video autoPlay muted loop playsInline preload="none" className="absolute inset-0 w-full h-full object-cover opacity-40" src={collection.video} />
+            <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover opacity-40" src={collection.video} />
           )}
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,14,20,0.3) 0%, rgba(10,14,20,0.2) 50%, rgba(8,12,18,1) 100%)' }} />
 
