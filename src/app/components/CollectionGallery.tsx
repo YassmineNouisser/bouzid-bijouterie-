@@ -53,7 +53,7 @@ export const collections: CollectionCategory[] = [
     subtitle: 'Solitaires, Alliances & Parures',
     description: 'Des bagues solitaires étincelantes aux parures complètes, pour le plus beau jour de votre vie.',
     cover: '/products/r12.jpg',
-    video: '/products/vd-mariage.mov',
+    video: '/products/vd-mariage.mp4',
     images: ['/products/r12.jpg', ...mariageRings, ...mariageParures],
     sections: [
       { title: 'Bagues Solitaires', subtitle: 'L\'éclat d\'un engagement éternel', images: mariageRings },
@@ -96,7 +96,7 @@ export const collections: CollectionCategory[] = [
     subtitle: 'Brillance & Raffinement',
     description: "Quand l'or capture la lumière et sublime chaque geste.",
     cover: '/products/t1.jpg',
-    video: '/products/vd-eclat.mov',
+    video: '/products/vd-eclat.mp4',
     images: [
       '/products/t1.jpg', '/products/t2.jpg', '/products/t3.jpg', '/products/t4.jpg',
     ],
@@ -107,7 +107,7 @@ export const collections: CollectionCategory[] = [
     subtitle: 'Or Italien Raffiné',
     description: "La finesse de l'or italien dans des créations d'une légèreté exceptionnelle.",
     cover: '/products/lira1.jpg',
-    video: '/products/vd-lira.mov',
+    video: '/products/vd-lira.mp4',
     images: [
       '/products/lira1.jpg', '/products/lira2.jpg', '/products/lira3.jpg',
       '/products/lira4.jpg', '/products/lira5.jpg', '/products/lira6.jpg',
