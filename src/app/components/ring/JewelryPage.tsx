@@ -42,6 +42,7 @@ export function JewelryPage() {
   const targetRef = useRef(new THREE.Vector3(CAM.introStart.tgt.x, CAM.introStart.tgt.y, CAM.introStart.tgt.z));
   const [orbitEnabled] = useState(false);
   const [activeCollection, setActiveCollection] = useState<CollectionCategory | null>(null);
+  const selectionRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
@@ -80,6 +81,43 @@ export function JewelryPage() {
       });
     }
   }, [anyOverlayOpen]);
+
+  // Auto-scroll for "Notre Sélection" on mobile — pauses on touch
+  useEffect(() => {
+    const el = selectionRef.current;
+    if (!el) return;
+    let animId: number;
+    let paused = false;
+    const speed = 0.5; // px per frame
+
+    const step = () => {
+      if (!paused && el.scrollWidth > el.clientWidth) {
+        el.scrollLeft += speed;
+        // Loop: when reaching the end, jump back to start
+        if (el.scrollLeft >= el.scrollWidth - el.clientWidth) {
+          el.scrollLeft = 0;
+        }
+      }
+      animId = requestAnimationFrame(step);
+    };
+    animId = requestAnimationFrame(step);
+
+    const pause = () => { paused = true; };
+    const resume = () => { setTimeout(() => { paused = false; }, 2000); };
+
+    el.addEventListener('touchstart', pause, { passive: true });
+    el.addEventListener('touchend', resume, { passive: true });
+    el.addEventListener('pointerdown', pause);
+    el.addEventListener('pointerup', resume);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      el.removeEventListener('touchstart', pause);
+      el.removeEventListener('touchend', resume);
+      el.removeEventListener('pointerdown', pause);
+      el.removeEventListener('pointerup', resume);
+    };
+  }, []);
 
   /* ─── INTRO ANIMATION ──────────────────────────────────────── */
   const runIntroAnimation = () => {
@@ -289,7 +327,15 @@ export function JewelryPage() {
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <h3
+                  className="text-white text-xl md:text-4xl lg:text-5xl uppercase tracking-[0.15em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+                  style={{ fontFamily: "'Playfair Display SC', 'Cormorant Garamond', serif", fontWeight: 700 }}
+                >
+                  {cat.name}
+                </h3>
+              </div>
             </div>
           ))}
         </div>
@@ -301,34 +347,18 @@ export function JewelryPage() {
           <p className="text-[#C9A96E] text-xs tracking-[0.4em] uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Exclusivités</p>
           <h2 className="text-4xl md:text-6xl text-[#3B2F1E]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Notre Sélection</h2>
         </div>
-        <div className="flex gap-4 md:gap-6 overflow-x-hidden md:overflow-x-visible md:justify-center px-4 md:px-12 pb-4 scrollbar-hide">
-          <div className="flex gap-4 md:gap-6 selection-scroll md:!animate-none md:flex-wrap md:justify-center">
-            {[...Array(2)].flatMap((_, dup) =>
-              ['/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png'].map((src, i) => (
-                <div key={`${dup}-${i}`} className={`flex-shrink-0 w-[45vw] md:w-[18%] group cursor-pointer ${dup === 1 ? 'md:hidden' : ''}`}>
-                  <div className="relative overflow-hidden bg-[#EDE6DA] aspect-[3/4]">
-                    <img src={src} alt={`Sélection ${i + 1}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+        <div ref={selectionRef} className="selection-container flex gap-4 md:gap-6 overflow-x-auto md:overflow-x-visible md:justify-center px-4 md:px-12 pb-4 scrollbar-hide">
+          {['/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png'].map((src, i) => (
+            <div key={i} className="flex-shrink-0 w-[45vw] md:w-[18%]">
+              <div className="relative overflow-hidden bg-[#EDE6DA] aspect-[3/4]">
+                <img src={src} alt={`Sélection ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+              </div>
+            </div>
+          ))}
         </div>
         <style>{`
           .scrollbar-hide::-webkit-scrollbar { display: none; }
           .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-          @media (max-width: 767px) {
-            .selection-scroll {
-              animation: selectionScroll 20s linear infinite;
-            }
-            .selection-scroll:active, .selection-scroll:hover {
-              animation-play-state: paused;
-            }
-            @keyframes selectionScroll {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-          }
         `}</style>
       </section>
 
