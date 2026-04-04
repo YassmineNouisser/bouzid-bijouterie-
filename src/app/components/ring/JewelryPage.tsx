@@ -3,16 +3,11 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { AnimatePresence } from 'motion/react';
 import { RingCanvas } from './RingViewer';
+import { collections, CollectionGallery, type CollectionCategory } from '../CollectionGallery';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const products = [
-  { name: 'Solitaire Impérial', category: 'Bagues', price: 'Sur demande', image: 'https://images.unsplash.com/photo-1702721024359-fddf593fef3f?w=400&h=500&fit=crop' },
-  { name: 'Collier Lumière', category: 'Colliers', price: 'Sur demande', image: 'https://images.unsplash.com/photo-1758995115659-06a6cb5787eb?w=400&h=500&fit=crop' },
-  { name: 'Bracelet Audace', category: 'Bracelets', price: 'Sur demande', image: 'https://images.unsplash.com/photo-1758297679736-2e6ff92d2021?w=400&h=500&fit=crop' },
-  { name: 'Boucles Élégance', category: "Boucles d'oreilles", price: 'Sur demande', image: 'https://images.unsplash.com/photo-1769078595478-5f756986b818?w=400&h=500&fit=crop' },
-];
 
 /* ═══════════════════════════════════════════════════════════════════
    Camera positions — exact values from webgi-jewelry source
@@ -46,6 +41,8 @@ export function JewelryPage() {
   const cameraPositionRef = useRef(new THREE.Vector3(CAM.introStart.pos.x, CAM.introStart.pos.y, CAM.introStart.pos.z));
   const targetRef = useRef(new THREE.Vector3(CAM.introStart.tgt.x, CAM.introStart.tgt.y, CAM.introStart.tgt.z));
   const [orbitEnabled] = useState(false);
+  const [activeCollection, setActiveCollection] = useState<CollectionCategory | null>(null);
+  const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
     // ─── Lenis smooth scroll ──────────────────────────────────
@@ -54,15 +51,35 @@ export function JewelryPage() {
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -5 * t)),
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
 
     document.body.style.overflowY = 'hidden';
     window.scrollTo(0, 0);
     const timer = setTimeout(runIntroAnimation, 2000);
     return () => { clearTimeout(timer); lenis.destroy(); };
   }, []);
+
+  // Destroy Lenis when any overlay is open so it doesn't hijack scroll/touch events
+  const anyOverlayOpen = !!activeCollection;
+  useEffect(() => {
+    if (anyOverlayOpen) {
+      lenisRef.current?.destroy();
+      lenisRef.current = null;
+    } else if (!lenisRef.current) {
+      const lenis = new Lenis({
+        duration: 2.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -5 * t)),
+        smoothWheel: true,
+      });
+      lenisRef.current = lenis;
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        if (lenisRef.current) lenisRef.current.raf(time * 1000);
+      });
+    }
+  }, [anyOverlayOpen]);
 
   /* ─── INTRO ANIMATION ──────────────────────────────────────── */
   const runIntroAnimation = () => {
@@ -137,11 +154,11 @@ export function JewelryPage() {
     gsap.to('.nav-dot-2', { opacity: 0.5, scale: 1, scrollTrigger: s3ui });
     gsap.to('.nav-dot-3', { opacity: 1, scale: 1.5, scrollTrigger: s3ui });
 
-    // Section 4: text + nav fade away (canvas handled by master timeline Phase 3)
-    const s4ui = { trigger: '.scroll-section-4', start: 'top bottom', end: 'top top', scrub: 0.5, immediateRender: false };
-        gsap.to('#webgi-canvas-container', { opacity: 0, scrollTrigger: s4ui });
-    gsap.to('.emotions--content', { opacity: 0, y: '-50%', scrollTrigger: s4ui });
-    gsap.to('.side-nav', { opacity: 0, scrollTrigger: s4ui });
+    // Categories section: ring fades away slowly behind categories bg
+    const sCat = { trigger: '.categories-section', start: 'top bottom', end: 'top top', scrub: 0.5, immediateRender: false };
+    gsap.to('#webgi-canvas-container', { opacity: 0, scrollTrigger: sCat });
+    gsap.to('.emotions--content', { opacity: 0, y: '-50%', scrollTrigger: sCat });
+    gsap.to('.side-nav', { opacity: 0, scrollTrigger: sCat });
   };
 
   const scrollTo = (sel: string) => document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' });
@@ -227,7 +244,7 @@ export function JewelryPage() {
               Personnalisez votre bague avec des angles graphiques et des lignes pures. Un bijou créé pour traverser le temps.
             </p>
             <div className="flex gap-4">
-              {[{ l: 'Diamant', v: '3.00 ct' }, { l: 'Or', v: '18 carats' }, { l: 'Pureté', v: 'IF' }].map((s) => (
+              {[{ l: 'Or 18K', v: 'Jaune & Blanc' }, { l: 'Diamant', v: 'Solitaires' }, { l: 'Argent 925', v: 'Rhodié' }].map((s) => (
                 <div key={s.l} className="border border-[#3B2F1E]/20 px-4 py-3">
                   <p className="text-xs text-[#3B2F1E]/50 uppercase tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif" }}>{s.l}</p>
                   <p className="text-[#3B2F1E] font-light text-lg" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{s.v}</p>
@@ -257,6 +274,64 @@ export function JewelryPage() {
         </div>
       </section>
 
+      {/* ═══ SECTION: Catégories (style Messika) ═════════════════ */}
+      <section className="categories-section relative z-40">
+        <div className="grid grid-cols-3">
+          {[
+            { name: 'Colliers', image: '/assets/colliers.png', id: 'colliers' },
+            { name: 'Bagues', image: '/assets/bagues.png', id: 'bagues' },
+            { name: 'Bracelets', image: '/assets/bracelets.png', id: 'bracelets' },
+          ].map((cat) => (
+            <div key={cat.name} className="group relative overflow-hidden aspect-[2/3]">
+              <img
+                src={cat.image}
+                alt={cat.name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ SECTION: Notre Sélection (style Messika) ══════════════ */}
+      <section className="relative z-40 bg-[#F5EFE6] py-16 md:py-24">
+        <div className="text-center mb-10 md:mb-14 px-6">
+          <p className="text-[#C9A96E] text-xs tracking-[0.4em] uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Exclusivités</p>
+          <h2 className="text-4xl md:text-6xl text-[#3B2F1E]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Notre Sélection</h2>
+        </div>
+        <div className="flex gap-4 md:gap-6 overflow-x-hidden md:overflow-x-visible md:justify-center px-4 md:px-12 pb-4 scrollbar-hide">
+          <div className="flex gap-4 md:gap-6 selection-scroll md:!animate-none md:flex-wrap md:justify-center">
+            {[...Array(2)].flatMap((_, dup) =>
+              ['/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png'].map((src, i) => (
+                <div key={`${dup}-${i}`} className={`flex-shrink-0 w-[45vw] md:w-[18%] group cursor-pointer ${dup === 1 ? 'md:hidden' : ''}`}>
+                  <div className="relative overflow-hidden bg-[#EDE6DA] aspect-[3/4]">
+                    <img src={src} alt={`Sélection ${i + 1}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+        <style>{`
+          .scrollbar-hide::-webkit-scrollbar { display: none; }
+          .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+          @media (max-width: 767px) {
+            .selection-scroll {
+              animation: selectionScroll 20s linear infinite;
+            }
+            .selection-scroll:active, .selection-scroll:hover {
+              animation-play-state: paused;
+            }
+            @keyframes selectionScroll {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+          }
+        `}</style>
+      </section>
+
       {/* ═══ SECTION 4: Collections ═══════════════════════════════ */}
       <section className="scroll-section-4 relative z-40 bg-[#2A2118]/60 text-[#F5EFE6] backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-24">
@@ -265,16 +340,23 @@ export function JewelryPage() {
             <h2 className="text-5xl md:text-6xl mb-6 text-[#F5EFE6]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Créations d'exception</h2>
             <p className="text-[#F5EFE6]/60 max-w-2xl mx-auto" style={{ fontFamily: "'Montserrat', sans-serif" }}>Explorez nos collections où chaque pièce raconte une histoire unique</p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((item) => (
-              <div key={item.name} className="group relative overflow-hidden bg-[#3B2F1E] cursor-pointer">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+            {collections.map((col) => (
+              <div
+                key={col.id}
+                className="group relative overflow-hidden bg-[#3B2F1E] cursor-pointer"
+                onClick={() => setActiveCollection(col)}
+              >
                 <div className="relative aspect-[3/4] overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                  <img src={col.cover} alt={col.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#2A2118] via-[#2A2118]/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="text-[#C9A96E] text-xs tracking-[0.2em] uppercase mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>{item.category}</p>
-                    <h3 className="text-2xl mb-1 text-[#F5EFE6]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{item.name}</h3>
-                    <p className="text-sm text-[#C9A96E]" style={{ fontFamily: "'Montserrat', sans-serif" }}>{item.price}</p>
+                    <p className="text-[#C9A96E] text-xs tracking-[0.2em] uppercase mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>{col.subtitle}</p>
+                    <h3 className="text-2xl mb-1 text-[#F5EFE6]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col.name}</h3>
+                    <p className="text-sm text-[#C9A96E] flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                      Découvrir
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                    </p>
                   </div>
                   <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#C9A96E]/30 transition-all duration-500" />
                 </div>
@@ -283,6 +365,17 @@ export function JewelryPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══ Collection Gallery Overlay ═══════════════════════════ */}
+      <AnimatePresence>
+        {activeCollection && (
+          <CollectionGallery
+            collection={activeCollection}
+            onClose={() => setActiveCollection(null)}
+          />
+        )}
+      </AnimatePresence>
+
 
       {/* ═══ SECTION 5: Contact ═══════════════════════════════════ */}
       <section className="scroll-section-5 relative z-40 bg-[#F5EFE6] text-[#3B2F1E]">

@@ -61,7 +61,7 @@ function CameraController({
   targetRef: React.MutableRefObject<THREE.Vector3>;
   orbitEnabled: boolean;
 }) {
-  const { camera } = useThree();
+  const { camera, invalidate } = useThree();
 
   useFrame(() => {
     if (!orbitEnabled) {
@@ -76,6 +76,7 @@ function CameraController({
         targetRef.current.z,
       );
       camera.updateProjectionMatrix();
+      invalidate();
     }
   });
 
@@ -105,9 +106,9 @@ export function RingCanvas({ ringRef, cameraPositionRef, targetRef, orbitEnabled
       <Canvas
         gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }}
         camera={{ fov: 50, near: 0.1, far: 100, position: [3, -0.8, 1.2] }}
-        dpr={[1, 1.5]}
+        dpr={[1, 1.2]}
         performance={{ min: 0.5 }}
-        frameloop="always"
+        frameloop="demand"
         onCreated={({ gl, scene }) => {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 2.2;
@@ -116,10 +117,9 @@ export function RingCanvas({ ringRef, cameraPositionRef, targetRef, orbitEnabled
         }}
       >
         <CameraController cameraPositionRef={cameraPositionRef} targetRef={targetRef} orbitEnabled={orbitEnabled} />
-        <ambientLight intensity={1.0} />
-        <directionalLight position={[5, 8, 5]} intensity={3.5} color="#ffffff" />
-        <directionalLight position={[-5, 3, -5]} intensity={1.5} color="#ffeedd" />
-        <pointLight position={[0, 10, 0]} intensity={2.0} color="#ffffff" />
+        <ambientLight intensity={0.8} />
+        <directionalLight position={[5, 8, 5]} intensity={2.5} color="#ffffff" />
+        <directionalLight position={[-5, 3, -5]} intensity={1.0} color="#ffeedd" />
         <Environment preset="city" />
         <Suspense fallback={null}>
           <RingModel groupRef={ringRef} />
