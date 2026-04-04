@@ -347,11 +347,13 @@ export function JewelryPage() {
           <p className="text-[#C9A96E] text-xs tracking-[0.4em] uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Exclusivités</p>
           <h2 className="text-4xl md:text-6xl text-[#3B2F1E]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Notre Sélection</h2>
         </div>
-        <div ref={selectionRef} className="selection-container flex gap-4 md:gap-6 overflow-x-auto md:overflow-x-visible md:justify-center px-4 md:px-12 pb-4 scrollbar-hide">
-          {['/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png'].map((src, i) => (
-            <div key={i} className="flex-shrink-0 w-[45vw] md:w-[18%]">
+        <div ref={selectionRef} className="selection-container flex gap-4 md:gap-6 overflow-x-auto md:overflow-x-visible md:flex-wrap md:justify-center px-4 md:px-12 pb-4 scrollbar-hide">
+          {['/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png',
+            '/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png',
+          ].map((src, i) => (
+            <div key={i} className={`flex-shrink-0 w-[45vw] md:w-[18%] ${i >= 6 ? 'md:hidden' : ''}`}>
               <div className="relative overflow-hidden bg-[#EDE6DA] aspect-[3/4]">
-                <img src={src} alt={`Sélection ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                <img src={src} alt={`Sélection ${(i % 6) + 1}`} className="w-full h-full object-cover" loading="lazy" />
               </div>
             </div>
           ))}
