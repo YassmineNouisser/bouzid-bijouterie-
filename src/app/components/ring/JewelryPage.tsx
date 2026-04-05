@@ -83,27 +83,40 @@ export function JewelryPage() {
   }, [anyOverlayOpen]);
 
   // Auto-scroll for "Notre Sélection" on mobile — pauses on touch
+  // Uses CSS transform instead of scrollLeft for iOS Safari compatibility
   useEffect(() => {
     const el = selectionRef.current;
     if (!el) return;
+
+    // Only auto-scroll on mobile (overflow-x-auto)
+    const isMobile = () => el.scrollWidth > el.clientWidth;
+    if (!isMobile()) return;
+
     let animId: number;
     let paused = false;
+    let offset = 0;
     const speed = 0.5; // px per frame
+    const maxScroll = el.scrollWidth - el.clientWidth;
 
     const step = () => {
-      if (!paused && el.scrollWidth > el.clientWidth) {
-        el.scrollLeft += speed;
-        // Loop: when reaching the end, jump back to start
-        if (el.scrollLeft >= el.scrollWidth - el.clientWidth) {
-          el.scrollLeft = 0;
-        }
+      if (!paused && maxScroll > 0) {
+        offset += speed;
+        if (offset >= maxScroll) offset = 0;
+        el.scrollLeft = offset;
       }
       animId = requestAnimationFrame(step);
     };
-    animId = requestAnimationFrame(step);
+    // Small delay to let iOS finish layout before starting scroll
+    const startTimer = setTimeout(() => {
+      animId = requestAnimationFrame(step);
+    }, 500);
 
     const pause = () => { paused = true; };
-    const resume = () => { setTimeout(() => { paused = false; }, 2000); };
+    const resume = () => {
+      // Sync offset with current scroll position after user interaction
+      offset = el.scrollLeft;
+      setTimeout(() => { paused = false; }, 2000);
+    };
 
     el.addEventListener('touchstart', pause, { passive: true });
     el.addEventListener('touchend', resume, { passive: true });
@@ -111,6 +124,7 @@ export function JewelryPage() {
     el.addEventListener('pointerup', resume);
 
     return () => {
+      clearTimeout(startTimer);
       cancelAnimationFrame(animId);
       el.removeEventListener('touchstart', pause);
       el.removeEventListener('touchend', resume);
@@ -347,7 +361,7 @@ export function JewelryPage() {
           <p className="text-[#C9A96E] text-xs tracking-[0.4em] uppercase mb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Exclusivités</p>
           <h2 className="text-4xl md:text-6xl text-[#3B2F1E]" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 700 }}>Notre Sélection</h2>
         </div>
-        <div ref={selectionRef} className="selection-container flex gap-4 md:gap-6 overflow-x-auto md:overflow-x-visible md:flex-wrap md:justify-center px-4 md:px-12 pb-4 scrollbar-hide">
+        <div ref={selectionRef} data-lenis-prevent className="selection-container flex gap-4 md:gap-6 overflow-x-auto md:overflow-x-visible md:flex-wrap md:justify-center px-4 md:px-12 pb-4 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
           {['/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png',
             '/assets/v1.png', '/assets/v2.png', '/assets/v3.png', '/assets/v4.png', '/assets/v5.png', '/assets/v6.png',
           ].map((src, i) => (
