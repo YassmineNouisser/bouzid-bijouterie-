@@ -95,7 +95,7 @@ export function JewelryPage() {
     let animId: number;
     let paused = false;
     let offset = 0;
-    const speed = 0.5; // px per frame
+    const speed = 1.2; // px per frame
     const maxScroll = el.scrollWidth - el.clientWidth;
 
     const step = () => {
